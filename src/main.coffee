@@ -1,7 +1,8 @@
 React    = require('react')
 ReactDOM = require('react-dom')
 
-{ Row, Col, Navbar, Nav, NavItem, Table } = require('react-bootstrap')
+{ Row, Col, Navbar, Nav, NavItem, Table,
+  Form, FormGroup, FormControl, ControlLabel, Button } = require('react-bootstrap')
 
 ## Models
 
@@ -16,6 +17,9 @@ class Menu
 
   add: (name, item) ->
     @items[name] = item
+
+  remove: (name) ->
+    delete @items[name]
 
 class Pub
   constructor: (name, menu) ->
@@ -48,36 +52,92 @@ MenuListingItem = (props) ->
   <tr>
     <td>{item.name}</td>
     <td>{item.price}</td>
+    <td>
+      <Button bsStyle="danger" onClick={-> props.onRemove(props.name)}>
+        Odebrat
+      </Button>
+    </td>
   </tr>
 
-MenuListing = (props) ->
-  <div id="#menu-listing">
-    <h3>Naše menu</h3>
-    <Table striped={true} hover={true}>
-      <thead>
-        <tr>
-          <th>Název</th>
-          <th>Cena</th>
-        </tr>
-      </thead>
+MenuListing = React.createClass
+  item: (name, item) ->
+    <MenuListingItem key={name} name={name} item={item} onRemove={@props.onRemove}/>
 
-      <tbody>
-        {<MenuListingItem key={name} item={item} /> for name, item of props.menu.items}
-      </tbody>
-    </Table>
-  </div>
+  render: ->
+    <div id="#menu-listing">
+      <h3>Naše menu</h3>
+      <Table striped={true} hover={true}>
+        <thead>
+          <tr>
+            <th>Název</th>
+            <th>Cena</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {@item(name, item) for name, item of @props.menu.items}
+        </tbody>
+      </Table>
+    </div>
 
 AddMenuItem = React.createClass
+  getInitialState: ->
+    name: ''
+    price: 0.00
+
+  nameChanged: (event) ->
+    @setState(name: event.target.value)
+
+  priceChanged: (event) ->
+    @setState(price: event.target.value)
+
+  submit: (event) ->
+    event.preventDefault()
+
+    @props.onSubmit(new MenuItem(@state.name, @state.price))
+
   render: ->
-    <p>pridat polozku do menu</p>
+    <div id="#menu-editation">
+      <h3>Přidat položku</h3>
+
+      <Form horizontal>
+        <FormGroup controlId="name">
+          <Col componentClass={ControlLabel} sm={2}>
+            Název
+          </Col>
+          <Col sm={10}>
+            <FormControl type="text" placeholder="Název"
+              value={@state.name} onChange={@nameChanged} />
+          </Col>
+        </FormGroup>
+
+        <FormGroup controlId="price">
+          <Col componentClass={ControlLabel} sm={2}>
+            Cena
+          </Col>
+          <Col sm={10}>
+            <FormControl type="text"
+              value={@state.price} onChange={@priceChanged} />
+          </Col>
+        </FormGroup>
+
+        <FormGroup>
+          <Col smOffset={2} sm={10}>
+            <Button type="submit" onClick={@submit}>
+              Přidat
+            </Button>
+          </Col>
+        </FormGroup>
+      </Form>
+    </div>
 
 MenuEditation = (props) ->
   <Row>
     <Col xs=6>
-      <MenuListing menu={props.menu} />
+      <MenuListing menu={props.menu} onRemove={props.onRemoveItem} />
     </Col>
     <Col xs=6>
-      <AddMenuItem />
+      <AddMenuItem onSubmit={props.onAddItem} />
     </Col>
   </Row>
 
@@ -91,11 +151,25 @@ RootComponent = React.createClass
 
     { pub: new Pub('Garch', menu) }
 
+  addItem: (item) ->
+    pub = @state.pub
+
+    pub.menu.add(item.name, item)
+
+    @setState(pub: pub)
+
+  removeItem: (name) ->
+    pub = @state.pub
+
+    pub.menu.remove(name)
+
+    @setState(pub: pub)
+
   render: ->
     <div>
       <BeercounterNavbar />
       <div className="container">
-        <MenuEditation menu={@state.pub.menu} />
+        <MenuEditation menu={@state.pub.menu} onAddItem={@addItem} onRemoveItem={@removeItem} />
       </div>
     </div>
 
