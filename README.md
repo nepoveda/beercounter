@@ -31,3 +31,15 @@ sudo npm install -g browserify watchify npm-check-updates
 ```bash
 npm install
 ```
+
+## Scripts (defined in package.json)
+
+- build app for production
+```bash
+npm run build
+```
+
+- watch for changes in code and build app continuously for development
+```bash
+npm run watch
+```

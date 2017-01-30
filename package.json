@@ -24,6 +24,8 @@
     ]
   },
   "scripts": {
+    "watch": "NODE_ENV=development watchify  -v --extension=\".coffee\" src/main.coffee -o build/main.js",
+    "build": "NODE_ENV=production browserify -v --extension=\".coffee\" src/main.coffee -o build/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
