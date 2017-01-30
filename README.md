@@ -43,3 +43,8 @@ npm run build
 ```bash
 npm run watch
 ```
+
+- update dependencies (may brake the app)
+```bash
+npm run update
+```
