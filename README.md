@@ -23,7 +23,7 @@ sudo apt-get install -y nodejs
 
 - install global packages
 ```bash
-sudo npm install -g browserify watchify npm-check-updates
+sudo npm install -g coffee-script browserify watchify npm-check-updates
 ```
 
 - install rest of the dependencies (specified in package.json) locally (creates node_modules
@@ -44,7 +44,19 @@ npm run build
 npm run watch
 ```
 
+- start backend API (listens on localhost:3000)
+```bash
+npm run backend
+```
+
 - update dependencies (may brake the app)
 ```bash
 npm run update
 ```
+
+## Resources
+- react.js (frontend framework) - https://facebook.github.io/react/docs/hello-world.html
+- express.js (backend framework) - http://expressjs.com/
+- jQuery AJAX (frontend-backend communication) - http://api.jquery.com/category/ajax/
+- twitter bootstrap (styling framework) - http://getbootstrap.com/components/
+- react-bootstrap (react-bootstrap integration) - https://react-bootstrap.github.io/components.html

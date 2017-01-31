@@ -9,7 +9,10 @@
     "react-dom": "^15.0.1",
     "react-bootstrap": "^0.30.6",
     "lodash": "^4.12.0",
-    "immutable": "^3.8.1"
+    "immutable": "^3.8.1",
+    "body-parser": "^1.16.0",
+    "cors": "^2.8.1",
+    "express": "^4.14.1"
   },
   "devDependencies": {
     "browserify": "^14.0.0",
@@ -27,6 +30,7 @@
     "watch": "NODE_ENV=development watchify  -v --extension=\".coffee\" src/main.coffee -o build/main.js",
     "build": "NODE_ENV=production browserify -v --extension=\".coffee\" src/main.coffee -o build/main.js",
     "update": "npm-check-updates -u && npm install",
+    "backend": "coffee -c backend/index.coffee && nodejs backend/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

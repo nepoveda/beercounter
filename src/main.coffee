@@ -1,3 +1,4 @@
+$ = require('jquery')
 React    = require('react')
 ReactDOM = require('react-dom')
 
@@ -14,7 +15,7 @@ BeercounterNavbar = React.createClass
     <Navbar>
       <Navbar.Header>
         <Navbar.Brand>
-          Beercounter
+          BeerCounter
         </Navbar.Brand>
       </Navbar.Header>
 
@@ -24,30 +25,36 @@ BeercounterNavbar = React.createClass
       </Nav>
     </Navbar>
 
-
 RootComponent = React.createClass
+  backendUrl: 'http://localhost:3000'
+
   getInitialState: ->
-    menu = new Menu()
+    { pub: new Pub('Garch', new Menu()) }
 
-    menu.add('desitka',   new MenuItem('Pivo 10°', 24.00))
-    menu.add('dvanactka', new MenuItem('Pivo 12°', 26.00))
-    menu.add('kofola',    new MenuItem('Kofola',   26.00))
+  componentDidMount: ->
+    @_ajax('GET', '/menu').then (response) =>
+      pub = @state.pub
 
-    { pub: new Pub('Garch', menu) }
+      for name, item of response.items
+        pub.menu.add(name, new MenuItem(name, item.price))
+
+      @setState(pub: pub)
 
   addItem: (item) ->
-    pub = @state.pub
+    @_ajax('POST', '/menu', { name: item.name, price: item.price }).then (response) =>
+      pub = @state.pub
 
-    pub.menu.add(item.name, item)
+      pub.menu.add(item.name, item)
 
-    @setState(pub: pub)
+      @setState(pub: pub)
 
   removeItem: (name) ->
-    pub = @state.pub
+    @_ajax('DELETE', '/menu?name=' + name).then (response) =>
+      pub = @state.pub
 
-    pub.menu.remove(name)
+      pub.menu.remove(name)
 
-    @setState(pub: pub)
+      @setState(pub: pub)
 
   render: ->
     <div>
@@ -57,6 +64,17 @@ RootComponent = React.createClass
         <MenuEditation menu={@state.pub.menu} onAddItem={@addItem} onRemoveItem={@removeItem} />
       </div>
     </div>
+
+  _ajax: (method, path, data = null) ->
+    params =
+      url: @backendUrl + path
+      method: method
+      contentType: 'application/json'
+      dataType: 'json'
+
+    params.data = JSON.stringify(data) if data
+
+    $.ajax(params)
 
 ReactDOM.render(
   <RootComponent />
