@@ -51,6 +51,7 @@ AddMenuItem = React.createClass
     @setState(price: event.target.value)
 
   submit: (event) ->
+    # otherwise submit triggers page refresh
     event.preventDefault()
 
     @props.onSubmit(new MenuItem(@state.name, @state.price))

@@ -1,11 +1,10 @@
-$ = require('jquery')
+$        = require('jquery')
 React    = require('react')
 ReactDOM = require('react-dom')
 
 { Navbar, Nav, NavItem } = require('react-bootstrap')
-
-{ Pub, Menu, MenuItem } = require('./models')
-{ MenuEditation }       = require('./components/menu_editation')
+{ Pub, Menu, MenuItem }  = require('./models')
+{ MenuEditation }        = require('./components/menu_editation')
 
 BeercounterNavbar = React.createClass
   linkClicked: () ->
@@ -29,9 +28,13 @@ RootComponent = React.createClass
   backendUrl: 'http://localhost:3000'
 
   getInitialState: ->
+    # initial state is a pub with empty menu
+
     { pub: new Pub('Garch', new Menu()) }
 
   componentDidMount: ->
+    # when component rendered, request menu from backend
+
     @_ajax('GET', '/menu').then (response) =>
       pub = @state.pub
 
@@ -41,7 +44,11 @@ RootComponent = React.createClass
       @setState(pub: pub)
 
   addItem: (item) ->
+    # add item to backend menu
+
     @_ajax('POST', '/menu', { name: item.name, price: item.price }).then (response) =>
+      # got response - add item to frontend menu
+
       pub = @state.pub
 
       pub.menu.add(item.name, item)
@@ -49,7 +56,11 @@ RootComponent = React.createClass
       @setState(pub: pub)
 
   removeItem: (name) ->
+    # remove item from backend menu
+
     @_ajax('DELETE', '/menu?name=' + name).then (response) =>
+      # got response - remove item from frontend menu
+
       pub = @state.pub
 
       pub.menu.remove(name)
@@ -66,6 +77,8 @@ RootComponent = React.createClass
     </div>
 
   _ajax: (method, path, data = null) ->
+    # ajax helper, returns promise (caller can call .then() on the result)
+
     params =
       url: @backendUrl + path
       method: method

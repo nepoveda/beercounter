@@ -8,9 +8,11 @@ menu = { items: { 'test item': { price: 12.34 } } }
 app.use(parser.json())
 app.use(cors())
 
+# GET /menu - returns menu as JSON
 app.get '/menu', (req, res) ->
   res.json(menu)
 
+# POST /menu { name: 'name', price: 12.34 } - adds item to menu
 app.post '/menu', (req, res) ->
   if !(req.body.name? and req.body.name.length)
     res.json(status: 'FAILED', message: 'missing name')
@@ -24,6 +26,7 @@ app.post '/menu', (req, res) ->
 
   res.json(status: 'OK')
 
+# DELETE /menu?name=name - removes item from menu
 app.delete '/menu', (req, res) ->
   delete menu['items'][req.query.name]
 
