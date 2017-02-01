@@ -4,7 +4,7 @@ express       = require('express')
 
 router = express.Router()
 
-# GET /consumers - returns all consumers
+# GET /consumers             - returns all consumers
 # GET /consumers?name=<name> - returns consumer by name
 router.get '/', (req, res) ->
   name = req.query.name
