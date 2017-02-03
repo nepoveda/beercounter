@@ -11,7 +11,7 @@ MenuListingItem = (props) ->
   <tr>
     <td>{item.name}</td>
     <td>{item.price}</td>
-    <td>
+    <td className="actions">
       <Button bsStyle="danger" onClick={-> props.onRemove(props.name)}>
         Zruš
       </Button>
@@ -23,13 +23,14 @@ MenuListing = React.createClass
     <MenuListingItem key={name} name={name} item={item} onRemove={@props.onRemove}/>
 
   render: ->
-    <div id="#menu-listing">
+    <div id="menu-listing">
       <h3>Naše menu</h3>
       <Table striped={true} hover={true}>
         <thead>
           <tr>
             <th>Název</th>
             <th>Cena</th>
+            <th className="actions"></th>
           </tr>
         </thead>
 
@@ -57,7 +58,7 @@ AddMenuItem = React.createClass
     @props.onSubmit(new MenuItem(@state.name, @state.price))
 
   render: ->
-    <div id="#menu-editation">
+    <div id="menu-editation">
       <h3>Přidat položku</h3>
 
       <Form horizontal>

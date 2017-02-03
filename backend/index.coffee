@@ -1,35 +1,18 @@
 express = require('express')
 parser  = require('body-parser')
 cors    = require('cors')
-app     = express()
 
-menu = { items: { 'test item': { price: 12.34 } } }
+{ itemsRouter }       = require('./items')
+{ consumersRouter }   = require('./consumers')
+{ consumptionRouter } = require('./consumption')
+
+app = express()
 
 app.use(parser.json())
 app.use(cors())
 
-# GET /menu - returns menu as JSON
-app.get '/menu', (req, res) ->
-  res.json(menu)
-
-# POST /menu { name: 'name', price: 12.34 } - adds item to menu
-app.post '/menu', (req, res) ->
-  if !(req.body.name? and req.body.name.length)
-    res.json(status: 'FAILED', message: 'missing name')
-    return
-
-  if !(req.body.price? and isFinite(req.body.price))
-    res.json(status: 'FAILED', message: 'missing price')
-    return
-
-  menu['items'][req.body.name] = { price: parseFloat(req.body.price) }
-
-  res.json(status: 'OK')
-
-# DELETE /menu?name=name - removes item from menu
-app.delete '/menu', (req, res) ->
-  delete menu['items'][req.query.name]
-
-  res.json(status: 'OK')
+app.use('/items',       itemsRouter)
+app.use('/consumers',   consumersRouter)
+app.use('/consumption', consumptionRouter)
 
 app.listen(3000)

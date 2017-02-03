@@ -42,18 +42,18 @@ RootComponent = React.createClass
   componentDidMount: ->
     # when component rendered, request menu from backend
 
-    @_ajax('GET', '/menu').then (response) =>
+    @_ajax('GET', '/items').then (response) =>
       pub = @state.pub
 
-      for name, item of response.items
-        pub.menu.add(name, new MenuItem(name, item.price))
+      for item in response.items
+        pub.menu.add(item.name, new MenuItem(item.name, item.price))
 
       @setState(pub: pub)
 
   addItem: (item) ->
     # add item to backend menu
 
-    @_ajax('POST', '/menu', { name: item.name, price: item.price }).then (response) =>
+    @_ajax('POST', '/items', { name: item.name, price: item.price }).then (response) =>
       # got response - add item to frontend menu
 
       pub = @state.pub
@@ -65,7 +65,7 @@ RootComponent = React.createClass
   removeItem: (name) ->
     # remove item from backend menu
 
-    @_ajax('DELETE', '/menu?name=' + name).then (response) =>
+    @_ajax('DELETE', '/items?name=' + name).then (response) =>
       # got response - remove item from frontend menu
 
       pub = @state.pub
