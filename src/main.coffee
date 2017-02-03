@@ -74,21 +74,21 @@ RootComponent = React.createClass
 
       @setState(pub: pub)
 
-  currectlyShow: <CostumerBill />
-
+  currectlyShow: 1
   setShowScreen: (id) ->
-    switch id
-      when id == 1 then @setState(currectlyShow: <MenuEditation menu={@state.pub.menu} onAddItem={@addItem} onRemoveItem={@removeItem} />)
-      when id == 2 then @setState(currectlyShow: <CostumerBill />)
-      else
-        @setState(currectlyShow: <h1> blbečku </h1>)
+    @setState(showId: id)
+
+  getShowScreen: ->
+    switch @id
+      when 1 then <CostumerBill />
+      when 2 then <MenuEditation menu={@state.pub.menu} onAddItem={@addItem} onRemoveItem={@removeItem} />
 
   render: ->
     <div>
       <BeercounterNavbar onSetScreen={@setShowScreen} />
 
       <div className="container">
-          {@currectlyShow}
+          {@getShowScreen}
       </div>
     </div>
 
