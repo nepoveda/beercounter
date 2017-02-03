@@ -5,39 +5,28 @@ ReactDOM = require('react-dom')
 { Navbar, Nav, NavItem } = require('react-bootstrap')
 { Pub, Menu, MenuItem }  = require('./models')
 { MenuEditation }        = require('./components/menu_editation')
-{ CostumerBill }         = require('./components/costumer_bill')
+{ CustumerTab }          = require('./components/custumer_tab')
 
-BeercounterNavbar = React.createClass
+BeercounterNavbar = (props) ->
+  <Navbar>
+    <Navbar.Header>
+      <Navbar.Brand>
+        BeerCounter
+      </Navbar.Brand>
+    </Navbar.Header>
 
-
-  linkClicked: (id) ->
-    @props.onSetScreen(id)
-
-  render: ->
-    <Navbar>
-      <Navbar.Header>
-        <Navbar.Brand>
-          BeerCounter
-        </Navbar.Brand>
-      </Navbar.Header>
-
-      <Nav>
-        <NavItem onClick={@linkClicked(1)}>Útrata</NavItem>
-        <NavItem onClick={@linkClicked(2)}>Editace lístku</NavItem>
-      </Nav>
-    </Navbar>
-
+    <Nav>
+      <NavItem onClick={-> props.onSetScreen('customer tab')}>Útrata</NavItem>
+      <NavItem onClick={-> props.onSetScreen('menu editation')}>Editace lístku</NavItem>
+    </Nav>
+  </Navbar>
 
 RootComponent = React.createClass
   backendUrl: 'http://localhost:3000'
 
   getInitialState: ->
-    # initial state is a pub with empty menu
-
-    { pub: new Pub('Garch', new Menu()) }
-
-
-
+    pub: new Pub('Garch', new Menu())
+    shownScreen: 'customer tab'
 
   componentDidMount: ->
     # when component rendered, request menu from backend
@@ -74,21 +63,18 @@ RootComponent = React.createClass
 
       @setState(pub: pub)
 
-  currectlyShow: 1
-  setShowScreen: (id) ->
-    @setState(showId: id)
-
-  getShowScreen: ->
-    switch @id
-      when 1 then <CostumerBill />
-      when 2 then <MenuEditation menu={@state.pub.menu} onAddItem={@addItem} onRemoveItem={@removeItem} />
-
   render: ->
+    mainComponent = switch @state.shownScreen
+      when 'customer tab'
+        <CustumerTab />
+      when 'menu editation'
+        <MenuEditation menu={@state.pub.menu} onAddItem={@addItem} onRemoveItem={@removeItem} />
+
     <div>
-      <BeercounterNavbar onSetScreen={@setShowScreen} />
+      <BeercounterNavbar onSetScreen={(id) => @setState(shownScreen: id)} />
 
       <div className="container">
-          {@getShowScreen}
+        {mainComponent}
       </div>
     </div>
 
