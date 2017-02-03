@@ -13,7 +13,7 @@ MenuListingItem = (props) ->
     <td>{item.price}</td>
     <td>
       <Button bsStyle="danger" onClick={-> props.onRemove(props.name)}>
-        Odebrat
+        Zruš
       </Button>
     </td>
   </tr>

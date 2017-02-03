@@ -5,10 +5,13 @@ ReactDOM = require('react-dom')
 { Navbar, Nav, NavItem } = require('react-bootstrap')
 { Pub, Menu, MenuItem }  = require('./models')
 { MenuEditation }        = require('./components/menu_editation')
+{ CostumerBill }         = require('./components/costumer_bill')
 
 BeercounterNavbar = React.createClass
-  linkClicked: () ->
-    # whatever
+
+
+  linkClicked: (id) ->
+    @props.onSetScreen(id)
 
   render: ->
     <Navbar>
@@ -19,10 +22,11 @@ BeercounterNavbar = React.createClass
       </Navbar.Header>
 
       <Nav>
-        <NavItem onClick={@linkClicked}>Útrata</NavItem>
-        <NavItem onClick={@linkClicked}>Editace lístku</NavItem>
+        <NavItem onClick={@linkClicked(1)}>Útrata</NavItem>
+        <NavItem onClick={@linkClicked(2)}>Editace lístku</NavItem>
       </Nav>
     </Navbar>
+
 
 RootComponent = React.createClass
   backendUrl: 'http://localhost:3000'
@@ -31,6 +35,9 @@ RootComponent = React.createClass
     # initial state is a pub with empty menu
 
     { pub: new Pub('Garch', new Menu()) }
+
+
+
 
   componentDidMount: ->
     # when component rendered, request menu from backend
@@ -67,12 +74,21 @@ RootComponent = React.createClass
 
       @setState(pub: pub)
 
+  currectlyShow: <CostumerBill />
+
+  setShowScreen: (id) ->
+    switch id
+      when id == 1 then @setState(currectlyShow: <MenuEditation menu={@state.pub.menu} onAddItem={@addItem} onRemoveItem={@removeItem} />)
+      when id == 2 then @setState(currectlyShow: <CostumerBill />)
+      else
+        @setState(currectlyShow: <h1> blbečku </h1>)
+
   render: ->
     <div>
-      <BeercounterNavbar />
+      <BeercounterNavbar onSetScreen={@setShowScreen} />
 
       <div className="container">
-        <MenuEditation menu={@state.pub.menu} onAddItem={@addItem} onRemoveItem={@removeItem} />
+          {@currectlyShow}
       </div>
     </div>
 
