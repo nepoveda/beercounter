@@ -3,7 +3,7 @@ React    = require('react')
 ReactDOM = require('react-dom')
 
 { Navbar, Nav, NavItem } = require('react-bootstrap')
-{ Pub, Menu, MenuItem }  = require('./models')
+{ Pub, Menu, MenuItem, CustumerItem }  = require('./models')
 { MenuEditation }        = require('./components/menu_editation')
 { CustumerTab }          = require('./components/custumer_tab')
 
@@ -66,7 +66,7 @@ RootComponent = React.createClass
   render: ->
     mainComponent = switch @state.shownScreen
       when 'customer tab'
-        <CustumerTab />
+        <CustumerTab menu={@state.pub.menu} />
       when 'menu editation'
         <MenuEditation menu={@state.pub.menu} onAddItem={@addItem} onRemoveItem={@removeItem} />
 
